@@ -1,0 +1,458 @@
+
+SQL*Plus: Release 11.2.0.2.0 Production on Fri May 26 18:55:31 2023
+
+Copyright (c) 1982, 2014, Oracle.  All rights reserved.
+
+SQL> connect system
+Enter password:
+Connected.
+
+
+SQL> CREATE TABLE User1(
+  2      user_id INT PRIMARY KEY,
+  3      user_name VARCHAR(100),
+  4      user_email VARCHAR(100),
+  5      user_mobile VARCHAR(20),
+  6      user_address VARCHAR(200)
+  7  );
+
+Table created.
+
+SQL> CREATE TABLE Roles (
+  2      role_id INT PRIMARY KEY,
+  3      role_name VARCHAR(100),
+  4      role_description VARCHAR(200)
+  5  );
+
+Table created.
+
+SQL> CREATE TABLE Login (
+  2      login_id INT PRIMARY KEY,
+  3      login_role_id INT,
+  4      login_username VARCHAR(100),
+  5      login_password VARCHAR(100),
+  6      FOREIGN KEY (login_role_id) REFERENCES Roles(role_id),
+  7      FOREIGN KEY (login_id) REFERENCES User1(user_id)
+  8  );
+
+Table created.
+
+SQL> CREATE TABLE Payment (
+  2      payment_customer_id INT,
+  3      payment_id INT PRIMARY KEY,
+  4      payment_date DATE,
+  5      payment_amount DECIMAL(10, 2),
+  6      payment_type VARCHAR(100),
+  7      FOREIGN KEY (payment_customer_id) REFERENCES User1(user_id)
+  8  );
+
+Table created.
+
+SQL> CREATE TABLE Stock (
+  2      stock_id INT PRIMARY KEY,
+  3      stock_type VARCHAR(100),
+  4      stock_items VARCHAR(100),
+  5      stock_number INT,
+  6      stock_description VARCHAR(200)
+  7  );
+
+Table created.
+
+SQL> CREATE TABLE Sales (
+  2      sale_customer_id INT,
+  3      sale_id INT PRIMARY KEY,
+  4      sale_description VARCHAR(200),
+  5      sale_type VARCHAR(100),
+  6      sale_amount DECIMAL(10, 2),
+  7      FOREIGN KEY (sale_customer_id) REFERENCES User1(user_id)
+  8  );
+
+Table created.
+
+SQL> CREATE TABLE User_Login (
+  2      user_id INT,
+  3      login_id INT,
+  4      FOREIGN KEY (user_id) REFERENCES User1(user_id),
+  5       FOREIGN KEY (login_id) REFERENCES Login(login_id)
+  6  );
+
+Table created.
+
+SQL> CREATE TABLE Login_Roles (
+  2      login_id INT,
+  3      role_id INT,
+  4      FOREIGN KEY (login_id) REFERENCES Login(login_id),
+  5      FOREIGN KEY (role_id) REFERENCES Roles(role_id)
+  6  );
+
+Table created.
+
+SQL> CREATE TABLE Payment_Sales (
+  2      payment_id INT,
+  3      sale_id INT,
+  4      FOREIGN KEY (payment_id) REFERENCES Payment(payment_id),
+  5      FOREIGN KEY (sale_id) REFERENCES Sales(sale_id)
+  6  );
+
+Table created.
+
+SQL> CREATE TABLE Payment_Stock (
+  2      payment_id INT,
+  3      stock_id INT,
+  4      FOREIGN KEY (payment_id) REFERENCES Payment(payment_id),
+  5      FOREIGN KEY (stock_id) REFERENCES Stock(stock_id)
+  6  );
+
+Table created.
+
+SQL> INSERT INTO User1
+  2  values (&user_id, &user_name, &user_email, &user_mobile, &user_address);
+Enter value for user_id: 1
+Enter value for user_name: 'Shravya'
+Enter value for user_email: 'shravya@gmail.com'
+Enter value for user_mobile: '1234567890'
+Enter value for user_address: '456 Kukatpally'
+old   2: values (&user_id, &user_name, &user_email, &user_mobile, &user_address)
+new   2: values (1, 'Shravya', 'shravya@gmail.com', '1234567890', '456 Kukatpally')
+
+1 row created.
+
+SQL> /
+Enter value for user_id: 2
+Enter value for user_name: 'Meghamala'
+Enter value for user_email: 'meghamala@gmail.com'
+Enter value for user_mobile: '9876543210'
+Enter value for user_address: '123 Banjara hills'
+old   2: values (&user_id, &user_name, &user_email, &user_mobile, &user_address)
+new   2: values (2, 'Meghamala', 'meghamala@gmail.com', '9876543210', '123 Banjara hills')
+
+1 row created.
+
+SQL> /
+Enter value for user_id: 3
+Enter value for user_name: 'Praneeth'
+Enter value for user_email: 'praneeth@gmail.com'
+Enter value for user_mobile: '5555555555'
+Enter value for user_address: '789 Amerpet'
+old   2: values (&user_id, &user_name, &user_email, &user_mobile, &user_address)
+new   2: values (3, 'Praneeth', 'praneeth@gmail.com', '5555555555', '789 Amerpet')
+
+1 row created.
+
+SQL> /
+Enter value for user_id: 4
+Enter value for user_name: 'Nithin'
+Enter value for user_email: 'Nithin@gmail.com'
+Enter value for user_mobile: '1111111111'
+Enter value for user_address: '321 Gachibowli'
+old   2: values (&user_id, &user_name, &user_email, &user_mobile, &user_address)
+new   2: values (4, 'Nithin', 'Nithin@gmail.com', '1111111111', '321 Gachibowli')
+
+1 row created.
+
+SQL> /
+Enter value for user_id: 5
+Enter value for user_name: 'David'
+Enter value for user_email: 'david@gmail.com'
+Enter value for user_mobile: '9999999999'
+Enter value for user_address: '555 Secundrabad'
+old   2: values (&user_id, &user_name, &user_email, &user_mobile, &user_address)
+new   2: values (5, 'David', 'david@gmail.com', '9999999999', '555 Secundrabad')
+
+1 row created.
+
+
+SQL> alter table user1
+  2  modify(user_name varchar(10),user_email varchar(30),user_mobile varchar(10),user_address varchar(30));
+
+Table altered.
+
+
+SQL> alter table user1
+  2  modify(user_email varchar(20),user_address varchar(20));
+
+Table altered.
+
+SQL> select * from user1;
+
+   USER_ID USER_NAME  USER_EMAIL           USER_MOBIL USER_ADDRESS
+---------- ---------- -------------------- ---------- --------------------
+         1 Shravya    shravya@gmail.com    1234567890 456 Kukatpally
+         2 Meghamala  meghamala@gmail.com  9876543210 123 Banjara hills
+         3 Praneeth   praneeth@gmail.com   5555555555 789 Amerpet
+         4 Nithin     Nithin@gmail.com     1111111111 321 Gachibowli
+         5 David      david@gmail.com      9999999999 555 Secundrabad
+
+
+SQL> INSERT INTO Roles values (&role_id, &role_name, &role_description);
+Enter value for role_id: 1
+Enter value for role_name: 'Admin'
+Enter value for role_description: 'Administrator role with full access'
+old   1: INSERT INTO Roles values (&role_id, &role_name, &role_description)
+new   1: INSERT INTO Roles values (1, 'Admin', 'Administrator role with full access')
+
+1 row created.
+
+SQL> /
+Enter value for role_id: 2
+Enter value for role_name: 'Employee'
+Enter value for role_description: 'Employee role with limited access'
+old   1: INSERT INTO Roles values (&role_id, &role_name, &role_description)
+new   1: INSERT INTO Roles values (2, 'Employee', 'Employee role with limited access')
+
+1 row created.
+
+SQL> /
+Enter value for role_id: 3
+Enter value for role_name: 'Customer'
+Enter value for role_description: 'Customer role with basic access'
+old   1: INSERT INTO Roles values (&role_id, &role_name, &role_description)
+new   1: INSERT INTO Roles values (3, 'Customer', 'Customer role with basic access')
+
+1 row created.
+
+
+SQL> alter table roles
+  2   modify(role_id integer,role_name varchar(10),role_description varchar(50));
+
+Table altered.
+
+SQL> select * from roles;
+
+   ROLE_ID ROLE_NAME  ROLE_DESCRIPTION
+---------- ---------- --------------------------------------------------
+         1 Admin      Administrator role with full access
+         2 Employee   Employee role with limited access
+         3 Customer   Customer role with basic access
+
+
+SQL> INSERT INTO Login values (&login_id, &login_role_id, &login_username, &login_password);
+Enter value for login_id: 1
+Enter value for login_role_id: 1
+Enter value for login_username: 'Shravya_kv'
+Enter value for login_password: 'password1'
+old   1: INSERT INTO Login values (&login_id, &login_role_id, &login_username, &login_password)
+new   1: INSERT INTO Login values (1, 1, 'Shravya_kv', 'password1')
+
+1 row created.
+
+SQL> /
+Enter value for login_id: 2
+Enter value for login_role_id: 2
+Enter value for login_username: 'Meghamala_29'
+Enter value for login_password: 'password2'
+old   1: INSERT INTO Login values (&login_id, &login_role_id, &login_username, &login_password)
+new   1: INSERT INTO Login values (2, 2, 'Meghamala_29', 'password2')
+
+1 row created.
+
+SQL> /
+Enter value for login_id: 3
+Enter value for login_role_id: 1
+Enter value for login_username: 'Y_praneeth'
+Enter value for login_password: 'password3'
+old   1: INSERT INTO Login values (&login_id, &login_role_id, &login_username, &login_password)
+new   1: INSERT INTO Login values (3, 1, 'Y_praneeth', 'password3')
+
+1 row created.
+
+SQL> /
+Enter value for login_id: 4
+Enter value for login_role_id: 3
+Enter value for login_username: 'Nithin_syam'
+Enter value for login_password: 'password4'
+old   1: INSERT INTO Login values (&login_id, &login_role_id, &login_username, &login_password)
+new   1: INSERT INTO Login values (4, 3, 'Nithin_syam', 'password4')
+
+1 row created.
+
+SQL> /
+Enter value for login_id: 5
+Enter value for login_role_id: 3
+Enter value for login_username: 'David_301'
+Enter value for login_password: 'password5'
+old   1: INSERT INTO Login values (&login_id, &login_role_id, &login_username, &login_password)
+new   1: INSERT INTO Login values (5, 3, 'David_301', 'password5')
+
+1 row created.
+
+SQL> alter table login
+  2  modify(login_username varchar(15),login_password varchar(10));
+
+Table altered.
+
+SQL> select * from login;
+
+  LOGIN_ID LOGIN_ROLE_ID LOGIN_USERNAME  LOGIN_PASS
+---------- ------------- --------------- ----------
+         1             1 Shravya_kv      password1
+         2             2 Meghamala_29    password2
+         3             1 Y_praneeth      password3
+         4             3 Nithin_syam     password4
+         5             3 David_301       password5
+
+SQL> insert all
+  2  into payment values(1, 1, '01/MAY/2023', 100.00, 'Credit Card')
+  3  select 1 from dual;
+
+1 row created.
+
+SQL> insert all
+  2  into payment values(2, 2, '01/MAY/2023', 50.00, 'PayPal')
+  3  into payment values(3, 3, '03/MAY/2023', 75.00, 'Cash')
+  4  into payment values(3, 4, '04/MAY/2023', 200.00, 'Credit Card')
+  5  into payment values(1, 5, '05/MAY/2023', 150.00, 'Cash')
+  6  SELECT 1 FROM DUAL;
+
+4 rows created.
+
+SQL> ALTER TABLE PAYMENT
+  2  MODIFY(PAYMENT_TYPE VARCHAR(15));
+
+Table altered.
+
+SQL> SELECT * FROM PAYMENT;
+
+PAYMENT_CUSTOMER_ID PAYMENT_ID PAYMENT_D PAYMENT_AMOUNT PAYMENT_TYPE
+------------------- ---------- --------- -------------- ---------------
+                  1          1 01-MAY-23            100 Credit Card
+                  2          2 01-MAY-23             50 PayPal
+                  3          3 03-MAY-23             75 Cash
+                  3          4 04-MAY-23            200 Credit Card
+                  1          5 05-MAY-23            150 Cash
+
+
+SQL> insert all
+  2  into stock values(1, 'Necklace', 'Gold Necklace', 10, 'Beautiful gold necklace')
+  3  into stock values(2, 'Ring', 'Diamond Ring', 5, 'Elegant diamond ring')
+  4  into stock values(3, 'Bracelet', 'Silver Bracelet', 8, 'Stylish silver bracelet')
+  5  into stock values(4, 'Earrings', 'Pearl Earrings', 12, 'Classic pearl earrings')
+  6  into stock values(5, 'Watch', 'Luxury Watch', 3, 'High-end luxury watch')
+  7  select 1 from dual;
+
+5 rows created.
+
+SQL> alter table stock
+  2  modify(stock_type varchar(10),stock_items varchar(15),stock_description varchar(30));
+
+Table altered.
+
+SQL> alter table stock
+  2  modify(stock_description varchar(25));
+
+Table altered.
+
+SQL> select * from stock;
+
+  STOCK_ID STOCK_TYPE STOCK_ITEMS     STOCK_NUMBER STOCK_DESCRIPTION
+---------- ---------- --------------- ------------ -------------------------
+         1 Necklace   Gold Necklace             10 Beautiful gold necklace
+         2 Ring       Diamond Ring               5 Elegant diamond ring
+         3 Bracelet   Silver Bracelet            8 Stylish silver bracelet
+         4 Earrings   Pearl Earrings            12 Classic pearl earrings
+         5 Watch      Luxury Watch               3 High-end luxury watch
+
+SQL> insert all
+  2  into sales values(1, 1, 'Gold Necklace Sale', 'Retail', 200.00)
+  3  into sales values (2, 2, 'Diamond Ring Sale', 'Retail', 500.00)
+  4  into sales values(3, 3, 'Silver Bracelet Sale', 'Wholesale', 300.00)
+  5  into sales values(4, 4, 'Pearl Earrings Sale', 'Retail', 150.00)
+  6  into sales values(4, 5, 'Luxury Watch Sale', 'Retail', 1000.00)
+  7  select 1 from dual;
+
+5 rows created.
+
+SQL> alter table sales
+  2  modify(sale_description varchar(25),sale_type varchar(10));
+
+Table altered.
+
+SQL> select * from sales;
+
+SALE_CUSTOMER_ID    SALE_ID SALE_DESCRIPTION          SALE_TYPE  SALE_AMOUNT
+---------------- ---------- ------------------------- ---------- -----------
+               1          1 Gold Necklace Sale        Retail             200
+               2          2 Diamond Ring Sale         Retail             500
+               3          3 Silver Bracelet Sale      Wholesale          300
+               4          4 Pearl Earrings Sale       Retail             150
+               4          5 Luxury Watch Sale         Retail            1000
+
+SQL> insert all
+  2  into user_login values(1,1)
+  3  into user_login values(2,2)
+  4  into user_login values(3,3)
+  5  into user_login values(4,4)
+  6  into user_login values(5,5)
+  7  select 1 from dual;
+
+5 rows created.
+
+SQL> select * from user_login;
+
+   USER_ID   LOGIN_ID
+---------- ----------
+         1          1
+         2          2
+         3          3
+         4          4
+         5          5
+
+SQL> insert all
+  2  into login_roles values(1,1)
+  3  into login_roles values(2,2)
+  4  into login_roles values(3,1)
+  5  into login_roles values(4,3)
+  6  into login_roles values(5,3)
+  7  select 1 from dual;
+
+5 rows created.
+
+SQL> select * from login_roles;
+
+  LOGIN_ID    ROLE_ID
+---------- ----------
+         1          1
+         2          2
+         3          1
+         4          3
+         5          3
+
+SQL> insert all
+  2  into payment_sales values(1,1)
+  3  into payment_sales values(2,2)
+  4  into payment_sales values(3,3)
+  5  into payment_sales values(4,4)
+  6  into payment_sales values(5,4)
+  7  select 1 from dual;
+
+5 rows created.
+
+SQL> select * from payment_sales;
+
+PAYMENT_ID    SALE_ID
+---------- ----------
+         1          1
+         2          2
+         3          3
+         4          4
+         5          4
+
+SQL> insert all
+  2  into payment_stock values(1,1)
+  3  into payment_stock values(2,2)
+  4  into payment_stock values(3,3)
+  5  into payment_stock values(4,4)
+  6  into payment_stock values(5,5)
+  7  select 1 from dual;
+
+5 rows created.
+
+SQL> select * from payment_stock;
+
+PAYMENT_ID   STOCK_ID
+---------- ----------
+         1          1
+         2          2
+         3          3
+         4          4
+         5          5
